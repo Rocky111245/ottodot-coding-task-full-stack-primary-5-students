@@ -18,7 +18,7 @@ This is a starter kit for building an AI-powered math problem generator applicat
 
 ```bash
 git clone <your-repo-url>
-cd math-problem-generator
+cd generate-problem-generator
 ```
 
 ### 2. Create a Supabase Project
