@@ -10,6 +10,7 @@ interface ChatMessageProps {
  * Displays a single chat message
  * Styles differently based on sender (AI vs user)
  */
+
 export default function ChatMessage({ message }: ChatMessageProps) {
     const isAI = message.sender === 'ai';
 
@@ -35,7 +36,12 @@ export default function ChatMessage({ message }: ChatMessageProps) {
                         Math Problem
                     </div>
                 )}
-                <p className="text-sm text-black leading-relaxed whitespace-pre-wrap">{message.text}</p>
+                {/* Conditional text color based on sender */}
+                <p className={`text-sm leading-relaxed whitespace-pre-wrap ${
+                    isAI ? 'text-gray-800' : 'text-white'
+                }`}>
+                    {message.text}
+                </p>
                 <div className={`text-xs mt-2 ${isAI ? 'text-gray-500' : 'text-white/70'}`}>
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>

@@ -55,10 +55,11 @@ export function generateFeedbackPrompt(
 ): string {
     return `${PRIMARY_5_SYLLABUS}
 
-PROBLEM: ${problemText}
+PROBLEM:${problemText}
+STUDENT'S ANSWER: ${userAnswer}
 CORRECT ANSWER: ${correctAnswer}
-STUDENT ANSWER: ${userAnswer}
 RESULT: ${isCorrect ? 'CORRECT' : 'INCORRECT'}
 
-Generate encouraging feedback for this student (2-4 sentences).`
+Generate detailed feedback following the structure in your system instructions. Show step-by-step working and explain the mathematical reasoning.
+and do not use * or other special characters when mentioning the step-by-step plan. Keep a normal conversation.`
 }

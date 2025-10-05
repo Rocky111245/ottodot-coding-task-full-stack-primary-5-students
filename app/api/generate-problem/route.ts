@@ -6,6 +6,12 @@ import { MODEL_NAME, PROBLEM_GENERATION_CONFIG } from '@/lib/geminiConfig'
 import { GENERATE_PROBLEM_PROMPT } from '@/lib/prompts/userPrompt'
 
 type ProblemPayload = { problem_text: string; final_answer: number }
+/**
+ * Only generate problem
+ *
+ * Responsibility: Only generate problem for the user and save it in the DB
+ * Does NOT handle user submission (that's handled separately in /submit-answer)
+ */
 
 export async function POST() {
     try {
