@@ -1,4 +1,4 @@
-
+// app/components/HomePage/HomePage.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -18,18 +18,51 @@ import StudyTip from '@/app/components/Dashboard/StudyTip'
  * pages can be rendered on the server and SEO can be applied
  */
 
+
+interface GlobalStats {
+    total_attempts: number
+    correct_attempts: number
+    accuracy_percentage: number
+}
+
 export default function HomePage() {
     const router = useRouter()
     const [totalProblems, setTotalProblems] = useState(0)
+    const [globalStats, setGlobalStats] = useState<GlobalStats>({
+        total_attempts: 0,
+        correct_attempts: 0,
+        accuracy_percentage: 0
+    })
     const [isHistoryOpen, setIsHistoryOpen] = useState(false)
     const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
 
+    // Fetch session count and global stats on mount
     useEffect(() => {
-        const sessionIds = localStorage.getItem('session_ids')
-        if (sessionIds) {
-            const ids = JSON.parse(sessionIds)
-            setTotalProblems(ids.length)
+        const fetchData = async () => {
+            try {
+                // Fetch session count
+                const sessionsResponse = await fetch('/api/sessions')
+                if (sessionsResponse.ok) {
+                    const sessionsData = await sessionsResponse.json()
+                    if (sessionsData.success) {
+                        setTotalProblems(sessionsData.count)
+                    }
+                }
+
+                // Fetch global statistics
+                const statsResponse = await fetch('/api/stats')
+                if (statsResponse.ok) {
+                    const statsData = await statsResponse.json()
+                    if (statsData.success) {
+                        setGlobalStats(statsData.stats)
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching data:', err)
+            }
         }
+
+        fetchData()
     }, [])
 
     const handleStartPractice = () => {
@@ -81,7 +114,10 @@ export default function HomePage() {
                     <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                         <div className="space-y-6">
                             <WelcomeCard />
-                            <ProgressStats totalProblems={totalProblems} />
+                            <ProgressStats
+                                totalProblems={totalProblems}
+                                globalStats={globalStats}
+                            />
                             <FeaturesList />
                         </div>
 

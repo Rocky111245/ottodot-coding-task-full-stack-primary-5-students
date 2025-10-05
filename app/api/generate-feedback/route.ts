@@ -33,7 +33,7 @@ export async function POST(request: Request) {
             )
         }
 
-        // 1. Fetch submission + session data
+        // 1. Fetch submission + sessions data
         const { data, error } = await supabase
             .from('math_problem_submissions')
             .select(`

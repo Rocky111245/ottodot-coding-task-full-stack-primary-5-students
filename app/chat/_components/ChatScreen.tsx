@@ -8,12 +8,6 @@ import Button from '@/app/components/Button/Buttons'
 import ScoreTracker from '@/app/components/ScoreTracker/ScoreTracker'
 import { Message, GenerateProblemResponse } from '@/ts-types/chat'
 
-/**
- * Glues together the ChatBox,ChatMessage and reusable components
- * Styles differently based on sender (AI vs user)
- */
-
-
 interface SubmitAnswerResponse {
     success: boolean
     is_correct: boolean
@@ -25,7 +19,6 @@ interface FeedbackResponse {
     success: boolean
     feedback_text: string
 }
-
 export default function ChatScreen() {
     const router = useRouter()
     const [messages, setMessages] = useState<Message[]>([])
@@ -34,6 +27,7 @@ export default function ChatScreen() {
     const [isFeedbackLoading, setIsFeedbackLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
+    const [lastSessionId, setLastSessionId] = useState<string | null>(null) // NEW: for display
     const [userAnswer, setUserAnswer] = useState<string>('')
     const [correctCount, setCorrectCount] = useState(0)
     const [totalAttempts, setTotalAttempts] = useState(0)
@@ -62,12 +56,8 @@ export default function ChatScreen() {
 
             setMessages((prev) => [...prev, newMessage])
             setActiveSessionId(data.session_id)
+            setLastSessionId(data.session_id)
             setUserAnswer('')
-
-            const existingIds = localStorage.getItem('session_ids')
-            const sessionIds = existingIds ? JSON.parse(existingIds) : []
-            sessionIds.unshift(data.session_id)
-            localStorage.setItem('session_ids', JSON.stringify(sessionIds))
 
         } catch (err) {
             const errorMsg = err instanceof Error ? err.message : 'An error occurred'
@@ -122,7 +112,7 @@ export default function ChatScreen() {
             }
 
             setMessages((prev) => [...prev, userMessage])
-            setActiveSessionId(null)
+            setActiveSessionId(null) // Clear for UI logic
             setUserAnswer('')
 
             if (data.is_correct) {
@@ -200,8 +190,20 @@ export default function ChatScreen() {
 
     const header = (
         <div>
-            <h2 className="text-lg font-bold">Math Practice Chat</h2>
-            <p className="text-sm opacity-90">Primary 5 Singapore Mathematics</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-lg font-bold">Math Practice Chat</h2>
+                    <p className="text-sm opacity-90">Primary 5 Singapore Mathematics</p>
+                </div>
+                {lastSessionId && (
+                    <div className="text-right">
+                        <p className="text-xs opacity-75 mb-1">Current Session</p>
+                        <p className="text-xs font-mono bg-white/20 px-2 py-1 rounded">
+                            {lastSessionId}
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     )
 
@@ -233,11 +235,11 @@ export default function ChatScreen() {
                     <Button
                         onClick={handleGenerateProblem}
                         isLoading={isLoading}
-                        disabled={isLoading || isFeedbackLoading}  // ← ADD THIS
+                        disabled={isLoading || isFeedbackLoading}
                         className="w-full max-w-sm"
                     >
                         {isLoading ? 'Generating...' :
-                            isFeedbackLoading ? 'Loading feedback...' :  // ← ADD THIS
+                            isFeedbackLoading ? 'Loading feedback...' :
                                 'Generate New Problem'}
                     </Button>
                 </div>

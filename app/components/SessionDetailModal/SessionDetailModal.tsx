@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 
 /**
- * Displays the details of a chat session
+ * Displays the details of a chat sessions
  * Can differentiate between AI and user submissions via UI styles
  */
 
@@ -45,12 +45,12 @@ export default function SessionDetailModal({sessionId, onClose}: SessionDetailMo
             try {
                 const response = await fetch(`/api/session/${sessionId}`)
                 if (!response.ok) {
-                    throw new Error('Failed to fetch session')
+                    throw new Error('Failed to fetch sessions')
                 }
                 const data = await response.json()
                 setSession(data.session)
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load session')
+                setError(err instanceof Error ? err.message : 'Failed to load sessions')
             } finally {
                 setIsLoading(false)
             }
