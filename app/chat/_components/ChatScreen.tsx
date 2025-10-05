@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef  } from 'react'
 import { useRouter } from 'next/navigation'
 import ChatBox from '@/app/chat/_components/ChatBox'
 import ChatMessage from '@/app/chat/_components/ChatMessage'
@@ -31,6 +31,14 @@ export default function ChatScreen() {
     const [userAnswer, setUserAnswer] = useState<string>('')
     const [correctCount, setCorrectCount] = useState(0)
     const [totalAttempts, setTotalAttempts] = useState(0)
+    const messagesEndRef = useRef<HTMLDivElement>(null)
+
+    // Auto-scroll to bottom when new messages arrive
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
+        }
+    }, [messages, isLoading, isFeedbackLoading])
 
     const handleGenerateProblem = async () => {
         setIsLoading(true)
@@ -256,12 +264,12 @@ export default function ChatScreen() {
             {/* Back to Home Button */}
             <button
                 onClick={() => router.push('/')}
-                className="fixed top-4 left-4 z-30 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg shadow-lg hover:border-blue-500 hover:shadow-xl transition-all flex items-center gap-2"
+                className="fixed top-2 left-2 md:top-4 md:left-4 z-30 px-1.5 py-1 max-sm:px-2 max-sm:py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2 bg-white border-2 border-gray-300 rounded-lg shadow-lg hover:border-blue-500 hover:shadow-xl transition-all flex items-center gap-1 md:gap-2 text-xs sm:text-sm"
             >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                <span className="font-medium text-gray-700">Home</span>
+                <span className="hidden min-[420px]:inline font-medium text-gray-700">Home</span>
             </button>
 
             {/* Main Content Container */}
@@ -270,7 +278,7 @@ export default function ChatScreen() {
                     <ScoreTracker correct={correctCount} total={totalAttempts} />
                 )}
 
-                <ChatBox header={header} footer={footer} maxHeight="calc(100vh - 200px)">
+                <ChatBox ref={messagesEndRef} header={header} footer={footer} maxHeight="calc(100vh - 200px)">
                     {messages.length === 0 && !isLoading && (
                         <div className="flex flex-col items-center justify-center h-full text-center px-4">
                             <div className="bg-blue-100 rounded-full p-6 mb-4">

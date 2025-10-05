@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import ChatHistorySidebar from '@/app/chat/_components/ChatHistorySidebar'
 import SessionDetailModal from '@/app/components/SessionDetailModal/SessionDetailModal'
 import WelcomeCard from '@/app/components/Dashboard/WelcomeCard'
@@ -37,11 +37,16 @@ export default function HomePage() {
     const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
 
     // Fetch session count and global stats on mount
+    const pathname = usePathname()
+
+    // Fetch data on mount AND when pathname changes (user navigates back)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch session count
-                const sessionsResponse = await fetch('/api/sessions')
+                const timestamp = Date.now()
+                const sessionsResponse = await fetch(`/api/sessions?_=${timestamp}`, {
+                    cache: 'no-store'  // Prevent caching
+                })
                 if (sessionsResponse.ok) {
                     const sessionsData = await sessionsResponse.json()
                     if (sessionsData.success) {
@@ -50,7 +55,9 @@ export default function HomePage() {
                 }
 
                 // Fetch global statistics
-                const statsResponse = await fetch('/api/stats')
+                const statsResponse = await fetch(`/api/stats?_=${timestamp}`, {
+                    cache: 'no-store'  // Prevent caching
+                })
                 if (statsResponse.ok) {
                     const statsData = await statsResponse.json()
                     if (statsData.success) {
@@ -63,21 +70,32 @@ export default function HomePage() {
         }
 
         fetchData()
-    }, [])
+    }, [pathname])  // Re-fetch when pathname changes (user navigates here)
 
     const handleStartPractice = () => {
         router.push('/chat')
     }
 
     const handleViewHistory = () => {
-        setIsHistoryOpen(true)
+        setIsHistoryOpen(prev => !prev)
     }
 
+    const handleCloseSidebar = async () => {
+        setIsHistoryOpen(false)
+
+        // Refetch count when sidebar closes
+        const timestamp = Date.now()
+        const response = await fetch(`/api/sessions?_=${timestamp}`, { cache: 'no-store' })
+        const data = await response.json()
+        if (data.success) {
+            setTotalProblems(data.count)
+        }
+    }
     return (
         <>
             <ChatHistorySidebar
                 isOpen={isHistoryOpen}
-                onClose={() => setIsHistoryOpen(false)}
+                onClose={handleCloseSidebar}
                 onSelectSession={setSelectedSessionId}
             />
             <SessionDetailModal
@@ -98,14 +116,14 @@ export default function HomePage() {
                         {totalProblems > 0 && (
                             <button
                                 onClick={handleViewHistory}
-                                className="absolute top-0 right-4 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg shadow-lg hover:border-blue-500 transition-all flex items-center gap-2"
+                                className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 px-2 py-1.5 sm:px-4 sm:py-2 bg-white border-2 border-gray-300 rounded-lg shadow-lg hover:border-blue-500 hover:shadow-xl transition-all flex items-center gap-1 sm:gap-2 text-sm"
                             >
-                                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <span className="font-medium text-gray-700">History</span>
-                                <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    {totalProblems}
+                                <span className="hidden xs:inline sm:inline font-medium text-gray-700">History</span>
+                                <span className="bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
+                        {totalProblems}
                                 </span>
                             </button>
                         )}
