@@ -747,7 +747,7 @@ Loop back to "Generate"
 
 ## 2. Next.js Caching & Stale Dashboard Data
 
-**Issue:** Next.js aggressive caching caused dashboard to display outdated statistics after solving problems.
+**Issue:** Next.js aggressive caching caused dashboard to display outdated statistics (in Vercel,not localhost) after solving problems.
 
 **Solutions Implemented:**
 - Added `export const dynamic = 'force-dynamic'` to `/api/sessions` and `/api/stats`
