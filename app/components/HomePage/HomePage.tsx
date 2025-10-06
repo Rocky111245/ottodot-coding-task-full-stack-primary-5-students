@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import ChatHistorySidebar from '@/app/chat/_components/ChatHistorySidebar'
-import SessionDetailModal from '@/app/components/SessionDetailModal/SessionDetailModal'
+import SessionDetailModal from '@/app/components/Dashboard/SessionDetailModal'
 import WelcomeCard from '@/app/components/Dashboard/WelcomeCard'
 import ProgressStats from '@/app/components/Dashboard/ProgressStats'
 import FeaturesList from '@/app/components/Dashboard/FeaturesList'

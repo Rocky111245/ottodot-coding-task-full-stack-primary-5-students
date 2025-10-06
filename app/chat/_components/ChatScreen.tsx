@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import ChatBox from '@/app/chat/_components/ChatBox'
 import ChatMessage from '@/app/chat/_components/ChatMessage'
 import Button from '@/app/components/Button/Buttons'
-import ScoreTracker from '@/app/components/ScoreTracker/ScoreTracker'
+import ScoreTracker from '@/app/chat/_components/ScoreTracker'
 import { Message, GenerateProblemResponse } from '@/ts-types/chat'
 
 interface SubmitAnswerResponse {

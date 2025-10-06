@@ -60,11 +60,7 @@ export async function POST(request: Request) {
 
         // 3) Calculate correctness. A very interesting,simple but effective way to assess correctness.
         // Use small epsilon for floating point comparison
-        const correctIsInteger = Number.isInteger(session.correct_answer)
-        const epsilon = correctIsInteger
-            ? 0.001  // Integer: must be almost exact (allows 24.0 for 24)
-            : 0.05   // Decimal: allow small rounding difference
-
+        const epsilon = 0.01 ;
         const is_correct = Math.abs(user_answer - session.correct_answer) <= epsilon
 
         // 4) Save submission to database (no feedback_text for now)
