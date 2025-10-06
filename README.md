@@ -228,6 +228,7 @@ ottodot-coding-task-full-stack-primary-5-students/
 # Screenshots
 <img width="1264" height="654" alt="image" src="https://github.com/user-attachments/assets/1bc5fcc0-409a-4172-936a-bf7f79d7098d" />
 <img width="1063" height="653" alt="image" src="https://github.com/user-attachments/assets/1c9fe95a-bfc7-4a94-ac31-016f1017c77c" />
+<img width="1176" height="656" alt="image" src="https://github.com/user-attachments/assets/f8acad2a-f22a-43b1-9531-14d94e113eab" />
 <img width="1272" height="652" alt="image" src="https://github.com/user-attachments/assets/77cc39a3-9ef7-4280-a72c-9e335ae34be9" />
 <img width="1296" height="651" alt="image" src="https://github.com/user-attachments/assets/9c71a863-7fe7-49a5-8eb5-91fe09c4d156" />
 
