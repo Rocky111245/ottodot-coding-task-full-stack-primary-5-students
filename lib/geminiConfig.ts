@@ -16,7 +16,7 @@ export const MODEL_NAME =
 // Problem generation config with schema (follows test-ai pattern)
 export const PROBLEM_GENERATION_CONFIG: GenConfig = {
     systemInstruction: MATH_TEACHER_SYSTEM_INSTRUCTION, // This is from the gemini api documentation.
-    temperature: 0.7,
+    temperature: 0.9,  // INCREASED from 0.7 - optimal for creative educational content
     responseMimeType: 'application/json',  // ← ONLY JSON, no text
     responseSchema: {
         type: Type.OBJECT,
