@@ -149,6 +149,9 @@ My own implementation of the coding task is described below. It is organized as 
 4. Data Flow
 5. Caveats/Problems Faced
 
+## NOTE: 
+_**Please note that the AI API requests are not slow in the chat but Thinking Mode(for AI) is on. So the wait time is around 1-3 seconds or
+a bit longer. The wait time is acceptable given the improved learning value and that this is a demo project.**_
 
 # Architecture of my Project
 ```
